@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>简历管理系统</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <h1>简历管理系统</h1>
+
+    <!-- 搜索和筛选条件 -->
+    <div class="search-container">
+        <input type="text" id="searchInput" placeholder="搜索员工">
+        <select id="positionFilter">
+            <option value="">所有职位</option>
+            <option value="工程师">工程师</option>
+            <option value="设计师">设计师</option>
+            <option value="产品经理">产品经理</option>
+        </select>
+        <input type="date" id="startDate" placeholder="入职日期起始">
+        <input type="date" id="endDate" placeholder="入职日期结束">
+        <button id="searchButton">搜索</button>
+    </div>
+
+    <!-- 管理员添加新员工的表单 -->
+    <form id="adminAddForm">
+        <h2>管理员添加员工</h2>
+        <input type="text" id="adminName" placeholder="姓名" required>
+        <input type="tel" id="adminPhone" placeholder="手机号码" required>
+        <input type="text" id="adminPosition" placeholder="职位" required>
+        <input type="date" id="adminJoinDate" placeholder="入职日期" required>
+        <input type="file" id="adminResume" accept=".pdf,.doc,.docx" required>
+        <button type="submit">添加员工</button>
+    </form>
+
+    <!-- 员工提交信息的表单 -->
+    <form id="employeeSubmitForm">
+        <h2>员工提交信息</h2>
+        <input type="text" id="employeeName" placeholder="姓名" required>
+        <input type="tel" id="employeePhone" placeholder="手机号码" required>
+        <input type="text" id="employeePosition" placeholder="职位" required>
+        <input type="date" id="employeeJoinDate" placeholder="入职日期" required>
+        <input type="file" id="employeeResume" accept=".pdf,.doc,.docx" required>
+        <button type="submit">提交信息</button>
+    </form>
+
+    <!-- 显示员工信息的表格 -->
+    <table id="employeeTable">
+        <thead>
+            <tr>
+                <th>姓名</th>
+                <th>手机号码</th>
+                <th>职位</th>
+                <th>入职日期</th>
+                <th>简历</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- 数据将通过JavaScript动态插入这里 -->
+        </tbody>
+    </table>
+
+    <script src="scripts.js"></script>
+</body>
+</html>

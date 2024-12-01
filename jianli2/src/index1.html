@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>员工简历提交系统</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <h1>员工简历提交系统</h1>
+
+    <!-- 员工提交信息的表单 -->
+    <form id="resumeForm">
+        <h2>填写简历</h2>
+        <label for="name">姓名:</label>
+        <input type="text" id="name" placeholder="请输入您的姓名" required><br><br>
+
+        <label for="phone">手机号码:</label>
+        <input type="tel" id="phone" placeholder="请输入您的手机号码" required><br><br>
+
+        <label for="position">职位:</label>
+        <input type="text" id="position" placeholder="请输入您的职位" required><br><br>
+
+        <label for="joinDate">入职日期:</label>
+        <input type="date" id="joinDate" required><br><br>
+
+        <button type="submit">提交简历</button>
+    </form>
+
+    <script src="scripts.js"></script>
+</body>
+</html>
