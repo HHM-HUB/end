@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
         formData.append('joinDate', joinDate);
 
         try {
-            const response = await fetch('https://example.com/api/submit-resume', {
+            const response = await fetch('https://hhm-hub.github.io/end/jianli2/src/index.html', {
                 method: 'POST',
                 body: formData
             });
