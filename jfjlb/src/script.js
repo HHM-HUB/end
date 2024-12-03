@@ -95,16 +95,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function exportRecords() {
         const records = getSortedRecords(getRecords());
-        const csvContent = "data:text/csv;charset=utf-8,"
-            + records.map(record => `${record.date},${record.weight}`).join("\n");
+        const data = records.map(record => [record.date, record.weight]);
 
-        const encodedUri = encodeURI(csvContent);
-        const link = document.createElement("a");
-        link.setAttribute("href", encodedUri);
-        link.setAttribute("download", "records.csv");
-        document.body.appendChild(link); // Required for FF
+        // 创建工作簿和工作表
+        const ws = XLSX.utils.aoa_to_sheet([['日期', '体重 (kg)'], ...data]);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, '减肥记录');
 
-        link.click(); // This will download the data file named "records.csv".
-        document.body.removeChild(link);
+        // 导出 Excel 文件
+        XLSX.writeFile(wb, 'records.xlsx');
     }
 });
