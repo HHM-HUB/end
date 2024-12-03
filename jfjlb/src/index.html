@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>减肥记录表</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>减肥记录表</h1>
+        <form id="recordForm">
+            <label for="date">日期:</label>
+            <input type="date" id="date" required>
+
+            <label for="weight">体重 (kg):</label>
+            <input type="number" id="weight" step="0.1" required>
+
+            <button type="submit">添加记录</button>
+        </form>
+
+        <table id="recordsTable">
+            <thead>
+                <tr>
+                    <th>日期</th>
+                    <th>体重 (kg)</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- 记录将在这里动态添加 -->
+            </tbody>
+        </table>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
