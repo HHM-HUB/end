@@ -1,20 +1,7 @@
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
-    margin: 0;
-    padding: 0;
-}
-
 .container {
     max-width: 600px;
-    margin: 50px auto;
+    margin: 0 auto;
     padding: 20px;
-    background-color: #fff;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
-h1 {
-    text-align: center;
 }
 
 form {
@@ -23,55 +10,51 @@ form {
     gap: 10px;
 }
 
-label {
-    font-weight: bold;
+.input-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
 
-input[type="date"],
-input[type="number"] {
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+.input-group label {
+    min-width: 100px;
 }
 
-button {
+.input-group input {
     padding: 10px;
-    background-color: #007bff;
-    color: #fff;
+    box-sizing: border-box;
+}
+
+.button-group {
+    display: flex;
+    justify-content: space-between;
+}
+
+form button {
+    padding: 10px 20px;
+    background-color: #007BFF;
+    color: white;
     border: none;
-    border-radius: 4px;
     cursor: pointer;
+    transition: background-color 0.3s;
 }
 
-button:hover {
+form button:hover {
     background-color: #0056b3;
 }
 
 table {
     width: 100%;
-    margin-top: 20px;
     border-collapse: collapse;
+    margin-top: 20px;
 }
 
-th, td {
+table th, table td {
+    border: 1px solid #ddd;
     padding: 10px;
     text-align: left;
-    border-bottom: 1px solid #ddd;
 }
 
-th {
+table th {
     background-color: #f2f2f2;
-}
-
-td button {
-    background-color: #dc3545;
-    color: #fff;
-    border: none;
-    border-radius: 4px;
-    padding: 5px 10px;
-    cursor: pointer;
-}
-
-td button:hover {
-    background-color: #c82333;
 }
