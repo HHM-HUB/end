@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>♥爱尼佳月嫂家政服务中心♥</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            text-align: center;
+        }
+        .form-text.text-muted {
+            color: #6c757d;
+            font-size: 0.875em;
+            display: block;
+            margin-top: 0.25rem;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input[type="text"], textarea {
+            width: calc(50% - 25px);
+            padding: 8px;
+            box-sizing: border-box;
+        }
+
+        #resume-preview {
+            margin-top: 20px;
+            padding: 20px;
+            border: 1px solid #ccc;
+            background-color: #f9f9f9;
+            display: flex;
+            align-items: flex-start;
+            flex-direction: column; /* 添加这一行以确保子元素垂直排列 */
+        }
+        #preview-title {
+            text-align: center;
+            align-self: center;
+            margin-bottom: 20px;
+        }
+        #avatar-preview {
+            max-width: 100px;
+            max-height: 100px;
+            border-radius: 50%;
+            margin-right: 20px;
+            align-self: center; /* 添加这一行以确保头像居中 */
+        }
+        #crop-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            justify-content: center;
+            align-items: center;
+        }
+        #crop-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+        #crop-image {
+            max-width: 100%;
+            max-height: 500px;
+        }
+        #crop-buttons {
+            margin-top: 10px;
+        }
+        .info-section {
+            flex: 1;
+        }
+        .info-line {
+            margin: 3px 0; /* 减少每行之间的间距 */
+        }
+        .info-line span:not(:last-child)::after {
+            content: ' | ';
+            margin-right: 5px;
+        }
+
+        #work-photos-preview {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .work-photo-preview {
+            max-width: 100px;
+            max-height: 100px;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+        #preview-store-contact-store{
+            text-align: center;
+        }
+
+
+    </style>
+
+
+</head>
+<body>
+<h1>爱尼佳月嫂家政服务中心</h1>
+<h1>简历填写</h1>
+<form id="resume-form">
+    <div class="form-group">
+        <label for="avatar">上传头像:</label>
+        <input type="file" id="avatar" name="avatar" accept="image/*" onchange="openCropper()">
+    </div>
+    <div class="form-group">
+        <label for="name">姓名:</label>
+        <input type="text" id="name" name="name">
+        <label for="gender">性别:</label>
+        <select id="gender" name="gender">
+            <option value="">请选择</option>
+            <option value="男">男</option>
+            <option value="女">女</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="address">地址:</label>
+        <input type="text" id="address" name="address">
+        <small class="form-text text-muted">请输入您的详细地址，例如：河南 南阳</small>
+    </div>
+
+
+    <div class="form-group">
+        <label for="age">年龄:</label>
+        <input type="text" id="age" name="age">
+    </div>
+    <div class="form-group">
+        <label for="experience">经验:</label>
+        <select id="experience" name="experience">
+            <option value="">请选择</option>
+            <option value="0年">0年</option>
+            <option value="1年">1年</option>
+            <option value="2年">2年</option>
+            <option value="3年">3年</option>
+            <option value="4年">4年</option>
+            <option value="5年">5年</option>
+            <option value="6年">6年</option>
+            <option value="7年">7年</option>
+            <option value="8年">8年</option>
+            <option value="9年">9年</option>
+            <option value="10年">10年</option>
+            <option value="11年">11年</option>
+            <option value="12年">12年</option>
+            <option value="13年">13年</option>
+            <option value="14年">14年</option>
+            <option value="15年">15年</option>
+            <option value="16年">16年</option>
+            <option value="17年">17年</option>
+            <option value="18年">18年</option>
+            <option value="19年">19年</option>
+            <option value="20年">20年</option>
+            <option value="21年">21年</option>
+            <option value="22年">22年</option>
+            <option value="23年">23年</option>
+            <option value="24年">24年</option>
+            <option value="25年">25年</option>
+            <option value="26年">26年</option>
+            <option value="27年">27年</option>
+            <option value="28年">28年</option>
+            <option value="29年">29年</option>
+            <option value="30年">30年</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="type">类型:</label>
+        <input type="text" id="type" name="type">
+    </div>
+
+    <div class="form-group">
+        <label for="education">学历:</label>
+        <select id="education" name="education">
+            <option value="">请选择</option>
+            <option value="小学">小学</option>
+            <option value="初中">初中</option>
+            <option value="高中">高中</option>
+            <option value="中专">中专</option>
+            <option value="大专">大专</option>
+            <option value="本科">本科</option>
+            <option value="研究生">研究生</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="nationality">民族:</label>
+        <input type="text" id="nationality" name="nationality">
+    </div>
+
+
+
+    <div class="form-group">
+        <label for="zodiac">属相:</label>
+        <select id="zodiac" name="zodiac">
+            <option value="">请选择</option>
+            <option value="鼠">鼠</option>
+            <option value="牛">牛</option>
+            <option value="虎">虎</option>
+            <option value="兔">兔</option>
+            <option value="龙">龙</option>
+            <option value="蛇">蛇</option>
+            <option value="马">马</option>
+            <option value="羊">羊</option>
+            <option value="猴">猴</option>
+            <option value="鸡">鸡</option>
+            <option value="狗">狗</option>
+            <option value="猪">猪</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="constellation">星座:</label>
+        <select id="constellation" name="constellation">
+            <option value="">请选择</option>
+            <option value="白羊座">白羊座：3月21日-4月19日</option>
+            <option value="金牛座">金牛座：4月20日-5月20日</option>
+            <option value="双子座">双子座：5月21日-6月21日</option>
+            <option value="巨蟹座">巨蟹座：6月22日-7月22日</option>
+            <option value="狮子座">狮子座：7月23日-8月22日</option>
+            <option value="处女座">处女座：8月23日-9月22日</option>
+            <option value="天秤座">天秤座：9月23日-10月23日</option>
+            <option value="天蝎座">天蝎座：10月24日-11月22日</option>
+            <option value="射手座">射手座：11月23日-12月21日</option>
+            <option value="摩羯座">摩羯座：12月22日-1月19日</option>
+            <option value="水瓶座">水瓶座：1月20日-2月18日</option>
+            <option value="双鱼座">双鱼座：2月19日-3月20日</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="height">身高(cm):</label>
+        <input type="text" id="height" name="height">
+    </div>
+    <div class="form-group">
+        <label for="weight">体重(kg):</label>
+        <input type="text" id="weight" name="weight">
+    </div>
+    <div class="form-group">
+        <label for="maritalStatus">婚姻状况:</label>
+        <select id="maritalStatus" name="maritalStatus">
+            <option value="">请选择</option>
+            <option value="未婚">未婚</option>
+            <option value="已婚">已婚</option>
+            <option value="离异">离异</option>
+            <option value="丧偶">丧偶</option>
+            <option value="保密">保密</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+    <label for="religion">宗教信仰:</label>
+    <select id="religion" name="religion">
+        <option value="">请选择</option>
+        <option value="无">无</option>
+        <option value="伊斯兰教">伊斯兰教</option>
+        <option value="基督教">基督教</option>
+        <option value="佛教">佛教</option>
+    </select>
+</div>
+
+    <div class="form-group">
+        <label for="language">语言:</label>
+        <input type="text" id="language" name="language">
+    </div>
+    <div class="form-group">
+        <label for="number">编号:</label>
+        <input type="text" id="number" name="number">
+    </div>
+    <div class="form-group">
+        <label for="mothersCount">月子个数:</label>
+        <input type="text" id="mothersCount" name="mothersCount">
+    </div>
+    <div class="form-group">
+        <label for="livingSituation">住家情况:</label>
+        <input type="text" id="livingSituation" name="livingSituation">
+    </div>
+    <div class="form-group">
+        <label for="currentRegion">现住区域:</label>
+        <input type="text" id="currentRegion" name="currentRegion">
+    </div>
+    <div class="form-group">
+        <label for="skills">专业技能:</label>
+        <textarea id="skills" name="skills" rows="4"></textarea>
+    </div>
+    <div class="form-group">
+        <label for="certificate">证书:</label>
+        <input type="text" id="certificate" name="certificate">
+        <label for="certificates">证书图片:</label>
+        <input type="file" id="certificates" name="certificates" accept="image/*" multiple onchange="openCertificatesCropper()">
+    </div>
+
+
+    <div class="form-group">
+        <label for="workPhotos">生活工作照:</label>
+        <input type="file" id="workPhotos" name="workPhotos" accept="image/*" multiple onchange="openWorkPhotosCropper()">
+    </div>
+    <div class="form-group">
+        <label for="store">所在门店:</label>
+        <input type="text" id="store" name="store" value="爱尼佳月嫂家政服务中心">
+        <label for="contactStore">联系门店:</label>
+        <input type="text" id="contactStore" name="contactStore" value="13333633698">
+    </div>
+
+
+    <button type="button" onclick="previewResume()">预览简历</button>
+    <button type="button" onclick="exportToPDF()">导出为PDF</button>
+</form>
+
+<div id="resume-preview">
+    <h2 id="preview-title"></h2> <!-- 新增标题元素 -->
+    <img id="avatar-preview" src="" alt="Avatar">
+    <div class="info-section">
+        <h2 id="preview-name"></h2>
+        <p id="preview-address" class="info-line"></p>
+        <p id="preview-age-experience" class="info-line"></p>
+        <p id="preview-gender" class="info-line"></p>
+        <p id="preview-certificate-type" class="info-line"></p>
+        <p id="preview-skills-store" class="info-line"></p>
+        <div id="certificates-preview" >
+            <!-- 证书图片预览将显示在这里 -->
+        </div>
+        <div id="work-photos-preview" >
+            <!-- 工作照片预览将显示在这里 -->
+        </div>
+    </div>
+</div>
+
+
+<div id="crop-modal">
+    <div id="crop-container">
+        <img id="crop-image" src="" alt="Crop Image">
+        <div id="crop-buttons">
+            <button type="button" onclick="cropImage()">裁剪</button>
+            <button type="button" onclick="closeCropper()">取消</button>
+        </div>
+    </div>
+</div>
+
+<div id="work-photo-crop-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.7); justify-content: center; align-items: center;">
+    <div id="work-photo-crop-container" style="background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);">
+        <img id="work-photo-crop-image" src="" alt="Crop Work Photo" style="max-width: 100%; max-height: 500px;">
+        <div id="work-photo-crop-buttons" style="margin-top: 10px;">
+            <button type="button" onclick="cropWorkPhoto()">裁剪</button>
+            <button type="button" onclick="closeWorkPhotoCropper()">取消</button>
+        </div>
+    </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
+<script>
+    let cropper;
+    let workPhotoCroppers = [];
+    let certificateCroppers = [];
+
+    function openCropper() {
+        const fileInput = document.getElementById('avatar');
+        const file = fileInput.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = document.getElementById('crop-image');
+                img.src = e.target.result;
+                img.onload = function() {
+                    cropper = new Cropper(img, {
+                        aspectRatio: 1 / 1,
+                        viewMode: 1,
+                        dragMode: 'move',
+                        autoCropArea: 1,
+                        cropBoxMovable: false,
+                        cropBoxResizable: false,
+                        toggleDragModeOnDblclick: false,
+                    });
+                    document.getElementById('crop-modal').style.display = 'flex';
+                };
+            };
+            reader.readAsDataURL(file);
+        }
+    }
+
+    function cropImage() {
+        if (cropper) {
+            const canvas = cropper.getCroppedCanvas({
+                width: 100,
+                height: 100,
+            });
+            const croppedImageUrl = canvas.toDataURL();
+
+            const avatarPreview = document.getElementById('avatar-preview');
+            if (avatarPreview) {
+                avatarPreview.src = croppedImageUrl;
+            } else {
+                console.error('Element with id "avatar-preview" not found.');
+            }
+
+            closeCropper();
+        }
+    }
+
+    function closeCropper() {
+        if (cropper) {
+            cropper.destroy();
+        }
+        document.getElementById('crop-modal').style.display = 'none';
+    }
+
+    function openWorkPhotosCropper() {
+        const fileInput = document.getElementById('workPhotos');
+        const files = fileInput.files;
+        const workPhotosPreview = document.getElementById('work-photos-preview');
+        workPhotosPreview.innerHTML = ''; // 清空之前的预览
+
+        if (files.length > 30) {
+            alert('最多只能上传30张照片');
+            return;
+        }
+
+        Array.from(files).forEach((file, index) => {
+            if (workPhotoCroppers[index]) {
+                workPhotoCroppers[index].destroy();
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const imgContainer = document.createElement('div');
+                imgContainer.style.marginRight = '10px';
+                imgContainer.style.display = 'inline-block';
+
+                const img = document.createElement('img');
+                img.id = `work-photo-crop-image-${index}`;
+                img.src = e.target.result;
+                img.style.maxWidth = '100px';
+                img.style.maxHeight = '100px';
+                img.onload = function() {
+                    workPhotoCroppers[index] = new Cropper(img, {
+                        aspectRatio: 1 / 1,
+                        viewMode: 1,
+                        dragMode: 'move',
+                        autoCropArea: 1,
+                        cropBoxMovable: false,
+                        cropBoxResizable: false,
+                        toggleDragModeOnDblclick: false,
+                    });
+                };
+
+                const buttonsContainer = document.createElement('div');
+                buttonsContainer.style.marginTop = '10px';
+
+                const cropButton = document.createElement('button');
+                cropButton.type = 'button';
+                cropButton.textContent = '裁剪';
+                cropButton.onclick = () => cropWorkPhoto(index);
+
+                const closeButton = document.createElement('button');
+                closeButton.type = 'button';
+                closeButton.textContent = '取消';
+                closeButton.onclick = () => closeWorkPhotoCropper(index);
+
+                buttonsContainer.appendChild(cropButton);
+                buttonsContainer.appendChild(closeButton);
+
+                imgContainer.appendChild(img);
+                imgContainer.appendChild(buttonsContainer);
+                workPhotosPreview.appendChild(imgContainer);
+            };
+            reader.readAsDataURL(file);
+        });
+    }
+
+    function cropWorkPhoto(index) {
+        if (workPhotoCroppers[index]) {
+            const canvas = workPhotoCroppers[index].getCroppedCanvas({
+                width: 100,
+                height: 100,
+            });
+            const croppedImageUrl = canvas.toDataURL();
+
+            const workPhotoPreview = document.getElementById(`work-photo-preview-${index}`);
+            if (workPhotoPreview) {
+                workPhotoPreview.src = croppedImageUrl;
+            } else {
+                const img = document.createElement('img');
+                img.id = `work-photo-preview-${index}`;
+                img.src = croppedImageUrl;
+                img.style.maxWidth = '100px';
+                img.style.maxHeight = '100px';
+                img.style.marginTop = '10px';
+                document.getElementById('work-photos-preview').appendChild(img);
+            }
+
+            closeWorkPhotoCropper(index);
+        }
+    }
+
+    function closeWorkPhotoCropper(index) {
+        if (workPhotoCroppers[index]) {
+            workPhotoCroppers[index].destroy();
+        }
+        const modal = document.getElementById(`work-photo-crop-modal-${index}`);
+        if (modal) {
+            modal.style.display = 'none';
+        }
+    }
+
+    function openCertificatesCropper() {
+        const fileInput = document.getElementById('certificates');
+        const files = fileInput.files;
+        const certificatesPreview = document.getElementById('certificates-preview');
+        certificatesPreview.innerHTML = ''; // 清空之前的预览
+
+        if (files.length > 12) {
+            alert('最多只能上传12张证书图片');
+            return;
+        }
+
+        Array.from(files).forEach((file, index) => {
+            if (certificateCroppers[index]) {
+                certificateCroppers[index].destroy();
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const imgContainer = document.createElement('div');
+                imgContainer.style.marginRight = '10px';
+                imgContainer.style.display = 'inline-block';
+
+                const img = document.createElement('img');
+                img.id = `certificate-crop-image-${index}`;
+                img.src = e.target.result;
+                img.style.maxWidth = '100px';
+                img.style.maxHeight = '100px';
+                img.onload = function() {
+                    certificateCroppers[index] = new Cropper(img, {
+                        aspectRatio: 1 / 1,
+                        viewMode: 1,
+                        dragMode: 'move',
+                        autoCropArea: 1,
+                        cropBoxMovable: false,
+                        cropBoxResizable: false,
+                        toggleDragModeOnDblclick: false,
+                    });
+                };
+
+                const buttonsContainer = document.createElement('div');
+                buttonsContainer.style.marginTop = '10px';
+
+                const cropButton = document.createElement('button');
+                cropButton.type = 'button';
+                cropButton.textContent = '裁剪';
+                cropButton.onclick = () => cropCertificate(index);
+
+                const closeButton = document.createElement('button');
+                closeButton.type = 'button';
+                closeButton.textContent = '取消';
+                closeButton.onclick = () => closeCertificateCropper(index);
+
+                buttonsContainer.appendChild(cropButton);
+                buttonsContainer.appendChild(closeButton);
+
+                imgContainer.appendChild(img);
+                imgContainer.appendChild(buttonsContainer);
+                certificatesPreview.appendChild(imgContainer);
+            };
+            reader.readAsDataURL(file);
+        });
+    }
+
+    function cropCertificate(index) {
+        if (certificateCroppers[index]) {
+            const canvas = certificateCroppers[index].getCroppedCanvas({
+                width: 100,
+                height: 100,
+            });
+            const croppedImageUrl = canvas.toDataURL();
+
+            const certificatePreview = document.getElementById(`certificate-preview-${index}`);
+            if (certificatePreview) {
+                certificatePreview.src = croppedImageUrl;
+            } else {
+                const img = document.createElement('img');
+                img.id = `certificate-preview-${index}`;
+                img.src = croppedImageUrl;
+                img.style.maxWidth = '100px';
+                img.style.maxHeight = '100px';
+                img.style.marginTop = '10px';
+                document.getElementById('certificates-preview').appendChild(img);
+            }
+
+            closeCertificateCropper(index);
+        }
+    }
+
+    function closeCertificateCropper(index) {
+        if (certificateCroppers[index]) {
+            certificateCroppers[index].destroy();
+        }
+        const modal = document.getElementById(`certificate-crop-modal-${index}`);
+        if (modal) {
+            modal.style.display = 'none';
+        }
+    }
+    function previewResume() {
+        const name = document.getElementById('name').value;
+        const gender = document.getElementById('gender').value;
+        const address = document.getElementById('address').value;
+        const age = document.getElementById('age').value;
+        const experience = document.getElementById('experience').value;
+        const certificate = document.getElementById('certificate').value;
+        const type = document.getElementById('type').value;
+        const education = document.getElementById('education').value;
+        const nationality = document.getElementById('nationality').value;
+        const zodiac = document.getElementById('zodiac').value;
+        const constellation = document.getElementById('constellation').value;
+        const height = document.getElementById('height').value;
+        const weight = document.getElementById('weight').value;
+        const maritalStatus = document.getElementById('maritalStatus').value;
+        const religion = document.getElementById('religion').value;
+        const language = document.getElementById('language').value;
+        const number = document.getElementById('number').value;
+        const mothersCount = document.getElementById('mothersCount').value;
+        const livingSituation = document.getElementById('livingSituation').value;
+        const currentRegion = document.getElementById('currentRegion').value;
+        const skills = document.getElementById('skills').value;
+        const contactStore = document.getElementById('contactStore').value;
+        const store = document.getElementById('store').value; // 固定内容
+        const certificatesPreview = document.getElementById('certificates-preview');
+        const certificates = certificatesPreview.querySelectorAll('img[id^="certificate-preview-"]');
+        const certificatesHtml = Array.from(certificates).map(img => `<img src="${img.src}" alt="Certificate" class="work-photo-preview">`).join('');
+        const workPhotosPreview = document.getElementById('work-photos-preview');
+        const workPhotos = workPhotosPreview.querySelectorAll('img[id^="work-photo-preview-"]');
+        const workPhotosHtml = Array.from(workPhotos).map(img => `<img src="${img.src}" alt="Work Photo" class="work-photo-preview">`).join('');
+
+        let avatarUrl = document.getElementById('avatar-preview').src;
+        if (!avatarUrl || avatarUrl.includes('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=')) {
+            avatarUrl = '';
+        }
+
+
+        const previewHtml = `
+        <h2 id="preview-title">爱尼佳月嫂家政服务中心</h2> <!-- 设置标题内容 -->
+        <img id="avatar-preview" src="${avatarUrl}" alt="Avatar">
+        <div class="info-section">
+            <h3>${name}</h3>
+            <p id="preview-gender-address" class="info-line">性别/地址: ${gender} | ${address}</p>
+            <p id="preview-age-experience" class="info-line">年龄/经验: ${age} | ${experience}</p>
+            <p id="preview-type" class="info-line">类型: ${type}</p>
+            <p id="preview-education-nationality" class="info-line">学历: ${education} | 民族: ${nationality}</p>
+            <p id="preview-zodiac-constellation" class="info-line">属相: ${zodiac} | 星座: ${constellation}</p>
+            <p id="preview-height-weight" class="info-line">身高(cm): ${height} | 体重(kg): ${weight}</p>
+            <p id="preview-maritalStatus" class="info-line">婚姻状况: ${maritalStatus}</p>
+            <p id="preview-religion" class="info-line">宗教信仰: ${religion}</p>
+            <p id="preview-language" class="info-line">语言: ${language}</p>
+            <p id="preview-number" class="info-line">编号: ${number}</p>
+            <p id="preview-mothersCount" class="info-line">月子个数: ${mothersCount}</p>
+            <p id="preview-livingSituation" class="info-line">住家情况: ${livingSituation}</p>
+            <p id="preview-currentRegion" class="info-line">现住区域: ${currentRegion}</p>
+            <p id="preview-skills" class="info-line">专业技能: ${skills}</p>
+            <p id="preview-certificate" class="info-line">证书(及图片): ${certificate}</p>
+            <p id="preview-certificates" class="info-line"></p>
+            ${certificatesHtml}
+            <p id="preview-workPhotos" class="info-line">生活工作照:</p>
+            ${workPhotosHtml}
+            <p id="preview-store-contact-store" class="info-line">${store} | ${contactStore}</p>
+        </div>
+    `;
+
+        document.getElementById('resume-preview').innerHTML = previewHtml;
+    }
+
+    function exportToPDF() {
+    const name = document.getElementById('name').value;
+    const resumePreview = document.getElementById('resume-preview');
+
+    // 使用html2pdf库导出PDF
+    html2pdf().from(resumePreview).save(`${name}简历.pdf`);
+}
+
+</script>
+
+</body>
+</html>
