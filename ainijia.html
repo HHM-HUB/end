@@ -125,9 +125,9 @@
         </select>
     </div>
     <div class="form-group">
-        <label for="address">地址:</label>
+        <label for="address">籍贯:</label>
         <input type="text" id="address" name="address">
-        <small class="form-text text-muted">请输入您的详细地址，例如：河南 南阳</small>
+        <small class="form-text text-muted">请输入您的详细地址，例如:河南邓州</small>
     </div>
 
 
@@ -285,15 +285,15 @@
         <input type="text" id="livingSituation" name="livingSituation">
     </div>
     <div class="form-group">
-        <label for="currentRegion">现住区域:</label>
+        <label for="currentRegion">工作经历:</label>
         <input type="text" id="currentRegion" name="currentRegion">
     </div>
     <div class="form-group">
-        <label for="skills">专业技能:</label>
+        <label for="skills">专业服务技能:</label>
         <textarea id="skills" name="skills" rows="4"></textarea>
     </div>
     <div class="form-group">
-        <label for="certificate">证书:</label>
+        <label for="certificate">持有证书:</label>
         <input type="text" id="certificate" name="certificate">
         <label for="certificates">证书图片:</label>
         <input type="file" id="certificates" name="certificates" accept="image/*" multiple onchange="openCertificatesCropper()">
@@ -651,7 +651,7 @@
         <img id="avatar-preview" src="${avatarUrl}" alt="Avatar">
         <div class="info-section">
             <h3>${name}</h3>
-            <p id="preview-gender-address" class="info-line">性别/地址: ${gender} | ${address}</p>
+            <p id="preview-gender-address" class="info-line">性别/籍贯: ${gender} | ${address}</p>
             <p id="preview-age-experience" class="info-line">年龄/经验: ${age} | ${experience}</p>
             <p id="preview-type" class="info-line">类型: ${type}</p>
             <p id="preview-education-nationality" class="info-line">学历: ${education} | 民族: ${nationality}</p>
@@ -663,8 +663,8 @@
             <p id="preview-number" class="info-line">编号: ${number}</p>
             <p id="preview-mothersCount" class="info-line">月子个数: ${mothersCount}</p>
             <p id="preview-livingSituation" class="info-line">住家情况: ${livingSituation}</p>
-            <p id="preview-currentRegion" class="info-line">现住区域: ${currentRegion}</p>
-            <p id="preview-skills" class="info-line">专业技能: ${skills}</p>
+            <p id="preview-currentRegion" class="info-line">工作经历: ${currentRegion}</p>
+            <p id="preview-skills" class="info-line">专业服务技能: ${skills}</p>
             <p id="preview-certificate" class="info-line">证书(及图片): ${certificate}</p>
             <p id="preview-certificates" class="info-line"></p>
             ${certificatesHtml}
