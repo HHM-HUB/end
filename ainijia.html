@@ -8,9 +8,9 @@
         body {
             font-family: Arial, sans-serif;
             margin: 20px;
-           /* text-align: center;*/
+            /* text-align: center;*/
 
-                   }
+        }
 
         .form-text.text-muted {
             color: #6c757d;
@@ -181,6 +181,7 @@
         <input type="text" id="type" name="type">
     </div>
 
+
     <div class="form-group">
         <label for="education">学历:</label>
         <select id="education" name="education">
@@ -261,15 +262,15 @@
     </div>
 
     <div class="form-group">
-    <label for="religion">宗教信仰:</label>
-    <select id="religion" name="religion">
-        <option value="">请选择</option>
-        <option value="无">无</option>
-        <option value="伊斯兰教">伊斯兰教</option>
-        <option value="基督教">基督教</option>
-        <option value="佛教">佛教</option>
-    </select>
-</div>
+        <label for="religion">宗教信仰:</label>
+        <select id="religion" name="religion">
+            <option value="">请选择</option>
+            <option value="无">无</option>
+            <option value="伊斯兰教">伊斯兰教</option>
+            <option value="基督教">基督教</option>
+            <option value="佛教">佛教</option>
+        </select>
+    </div>
 
     <div class="form-group">
         <label for="language">语言:</label>
@@ -290,11 +291,16 @@
     <div class="form-group">
         <label for="currentRegion">工作经历:</label>
         <input type="text" id="currentRegion" name="currentRegion">
+<div class="form-group">
+    <label for="skills">专业服务技能:</label>
+    <textarea id="skills" name="skills" rows="4" cols="50">
+婴儿:喂奶喂水换尿裤，洗澡抚触被动操，拍嗝，母乳喂养指导，黄疸 马牙 鹅口疮 湿疹观察护理红臀护理，脐带护理以及排气操等等。
+宝妈:月子餐制作，洗头擦浴，恶露观察，产妇形体操，心理疏导等等
+</textarea>
+</div>
+
     </div>
-    <div class="form-group">
-        <label for="skills">专业服务技能:</label>
-        <textarea id="skills" name="skills" rows="4"></textarea>
-    </div>
+
     <div class="form-group">
         <label for="certificate">持有证书:</label>
         <input type="text" id="certificate" name="certificate">
@@ -328,7 +334,6 @@
         <p id="preview-age-experience" class="info-line"></p>
         <p id="preview-gender" class="info-line"></p>
         <p id="preview-certificate-type" class="info-line"></p>
-        <p id="preview-skills-store" class="info-line"></p>
         <div id="certificates-preview" >
             <!-- 证书图片预览将显示在这里 -->
         </div>
@@ -612,81 +617,82 @@
             modal.style.display = 'none';
         }
     }
+
+
     function previewResume() {
-        const name = document.getElementById('name').value;
-        const gender = document.getElementById('gender').value;
-        const address = document.getElementById('address').value;
-        const age = document.getElementById('age').value;
-        const experience = document.getElementById('experience').value;
-        const certificate = document.getElementById('certificate').value;
-        const type = document.getElementById('type').value;
-        const education = document.getElementById('education').value;
-        const nationality = document.getElementById('nationality').value;
-        const zodiac = document.getElementById('zodiac').value;
-        const constellation = document.getElementById('constellation').value;
-        const height = document.getElementById('height').value;
-        const weight = document.getElementById('weight').value;
-        const maritalStatus = document.getElementById('maritalStatus').value;
-        const religion = document.getElementById('religion').value;
-        const language = document.getElementById('language').value;
-        const number = document.getElementById('number').value;
-        const mothersCount = document.getElementById('mothersCount').value;
-        const livingSituation = document.getElementById('livingSituation').value;
-        const currentRegion = document.getElementById('currentRegion').value;
-        const skills = document.getElementById('skills').value;
-        const contactStore = document.getElementById('contactStore').value;
-        const store = document.getElementById('store').value; // 固定内容
-        const certificatesPreview = document.getElementById('certificates-preview');
-        const certificates = certificatesPreview.querySelectorAll('img[id^="certificate-preview-"]');
-        const certificatesHtml = Array.from(certificates).map(img => `<img src="${img.src}" alt="Certificate" class="work-photo-preview">`).join('');
-        const workPhotosPreview = document.getElementById('work-photos-preview');
-        const workPhotos = workPhotosPreview.querySelectorAll('img[id^="work-photo-preview-"]');
-        const workPhotosHtml = Array.from(workPhotos).map(img => `<img src="${img.src}" alt="Work Photo" class="work-photo-preview">`).join('');
-
-        let avatarUrl = document.getElementById('avatar-preview').src;
-        if (!avatarUrl || avatarUrl.includes('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=')) {
-            avatarUrl = '';
-        }
-
-
-        const previewHtml = `
-        <h2 id="preview-title">爱尼佳月嫂家政服务中心</h2> <!-- 设置标题内容 -->
-        <img id="avatar-preview" src="${avatarUrl}" alt="Avatar">
-        <div class="info-section">
-            <h3>${name}</h3>
-            <p id="preview-gender-address" class="info-line">性别/籍贯: ${gender} | ${address}</p>
-            <p id="preview-age-experience" class="info-line">年龄/经验: ${age} | ${experience}</p>
-            <p id="preview-type" class="info-line">类型: ${type}</p>
-            <p id="preview-education-nationality" class="info-line">学历: ${education} | 民族: ${nationality}</p>
-            <p id="preview-zodiac-constellation" class="info-line">属相: ${zodiac} | 星座: ${constellation}</p>
-            <p id="preview-height-weight" class="info-line">身高(cm): ${height} | 体重(kg): ${weight}</p>
-            <p id="preview-maritalStatus" class="info-line">婚姻状况: ${maritalStatus}</p>
-            <p id="preview-religion" class="info-line">宗教信仰: ${religion}</p>
-            <p id="preview-language" class="info-line">语言: ${language}</p>
-            <p id="preview-number" class="info-line">编号: ${number}</p>
-            <p id="preview-mothersCount" class="info-line">月子个数: ${mothersCount}</p>
-            <p id="preview-livingSituation" class="info-line">住家情况: ${livingSituation}</p>
-            <p id="preview-currentRegion" class="info-line">工作经历: ${currentRegion}</p>
-            <p id="preview-skills" class="info-line">专业服务技能: ${skills}</p>
-            <p id="preview-certificate" class="info-line">证书(及图片): ${certificate}</p>
-            <p id="preview-certificates" class="info-line"></p>
-            ${certificatesHtml}
-            <p id="preview-workPhotos" class="info-line">生活工作照:</p>
-            ${workPhotosHtml}
-            <p id="preview-store-contact-store" class="info-line">${store} | ${contactStore}</p>
-        </div>
-    `;
-
-        document.getElementById('resume-preview').innerHTML = previewHtml;
+    const name = document.getElementById('name').value;
+    const gender = document.getElementById('gender').value;
+    const address = document.getElementById('address').value;
+    const age = document.getElementById('age').value;
+    const experience = document.getElementById('experience').value;
+    const certificate = document.getElementById('certificate').value;
+    const type = document.getElementById('type').value;
+    const education = document.getElementById('education').value;
+    const nationality = document.getElementById('nationality').value;
+    const zodiac = document.getElementById('zodiac').value;
+    const constellation = document.getElementById('constellation').value;
+    const height = document.getElementById('height').value;
+    const weight = document.getElementById('weight').value;
+    const maritalStatus = document.getElementById('maritalStatus').value;
+    const religion = document.getElementById('religion').value;
+    const language = document.getElementById('language').value;
+    const number = document.getElementById('number').value;
+    const mothersCount = document.getElementById('mothersCount').value;
+    const livingSituation = document.getElementById('livingSituation').value;
+    const currentRegion = document.getElementById('currentRegion').value;
+    const contactStore = document.getElementById('contactStore').value;
+    const skills = document.getElementById('skills').value; // 确保获取的是值而不是对象
+    const store = document.getElementById('store').value; // 固定内容
+    const certificatesPreview = document.getElementById('certificates-preview');
+    const certificates = certificatesPreview.querySelectorAll('img[id^="certificate-preview-"]');
+    const certificatesHtml = Array.from(certificates).map(img => `<img src="${img.src}" alt="Certificate" class="work-photo-preview">`).join('');
+    const workPhotosPreview = document.getElementById('work-photos-preview');
+    const workPhotos = workPhotosPreview.querySelectorAll('img[id^="work-photo-preview-"]');
+    const workPhotosHtml = Array.from(workPhotos).map(img => `<img src="${img.src}" alt="Work Photo" class="work-photo-preview">`).join('');
+    let avatarUrl = document.getElementById('avatar-preview').src;
+    if (!avatarUrl || avatarUrl.includes('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=')) {
+        avatarUrl = '';
     }
 
-    function exportToPDF() {
-    const name = document.getElementById('name').value;
-    const resumePreview = document.getElementById('resume-preview');
+    const previewHtml = `
+    <h2 id="preview-title">爱尼佳月嫂家政服务中心</h2> <!-- 设置标题内容 -->
+    <img id="avatar-preview" src="${avatarUrl}" alt="Avatar">
+    <div class="info-section">
+        <h3>${name}</h3>
+        <p id="preview-gender-address" class="info-line">性别/籍贯: ${gender} | ${address}</p>
+        <p id="preview-age-experience" class="info-line">年龄/经验: ${age} | ${experience}</p>
+        <p id="preview-type" class="info-line">类型: ${type}</p>
+        <p id="preview-education-nationality" class="info-line">学历: ${education} | 民族: ${nationality}</p>
+        <p id="preview-zodiac-constellation" class="info-line">属相: ${zodiac} | 星座: ${constellation}</p>
+        <p id="preview-height-weight" class="info-line">身高(cm): ${height} | 体重(kg): ${weight}</p>
+        <p id="preview-maritalStatus" class="info-line">婚姻状况: ${maritalStatus}</p>
+        <p id="preview-religion" class="info-line">宗教信仰: ${religion}</p>
+        <p id="preview-language" class="info-line">语言: ${language}</p>
+        <p id="preview-number" class="info-line">编号: ${number}</p>
+        <p id="preview-mothersCount" class="info-line">月子个数: ${mothersCount}</p>
+        <p id="preview-livingSituation" class="info-line">住家情况: ${livingSituation}</p>
+        <p id="preview-currentRegion" class="info-line">工作经历: ${currentRegion}</p>
+        <p id="preview-fixed-skills" class="info-line">专业服务技能:${skills}</p>
+        <p id="preview-certificate" class="info-line">证书(及图片): ${certificate}</p>
+        <p id="preview-certificates" class="info-line"></p>
+        ${certificatesHtml}
+        <p id="preview-workPhotos" class="info-line">生活工作照:</p>
+        ${workPhotosHtml}
+        <p id="preview-store-contact-store" class="info-line">${store} | ${contactStore}</p>
+    </div>
+`;
 
-    // 使用html2pdf库导出PDF
-    html2pdf().from(resumePreview).save(`${name}简历.pdf`);
+    document.getElementById('resume-preview').innerHTML = previewHtml;
 }
+
+
+    function exportToPDF() {
+        const name = document.getElementById('name').value;
+        const resumePreview = document.getElementById('resume-preview');
+
+        // 使用html2pdf库导出PDF
+        html2pdf().from(resumePreview).save(`${name}简历.pdf`);
+    }
 
 </script>
 
