@@ -177,9 +177,13 @@
     </div>
 
     <div class="form-group">
-        <label for="type">类型:</label>
-        <input type="text" id="type" name="type">
-    </div>
+    <label>类型:</label>
+    <input type="checkbox" id="type-nursing" name="type" value="养老护理"> 养老护理
+    <input type="checkbox" id="type-babysitting" name="type" value="育婴师"> 育婴师
+    <input type="checkbox" id="type-maidservice" name="type" value="月嫂"> 月嫂
+</div>
+
+
 
 
     <div class="form-group">
@@ -626,7 +630,14 @@
     const age = document.getElementById('age').value;
     const experience = document.getElementById('experience').value;
     const certificate = document.getElementById('certificate').value;
-    const type = document.getElementById('type').value;
+    /*const type = document.getElementById('type').value;*/
+        // 获取多选框的值
+        const typeNursing = document.getElementById('type-nursing').checked ? '养老护理' : '';
+        const typeBabysitting = document.getElementById('type-babysitting').checked ? '育婴师' : '';
+        const typeMaidservice = document.getElementById('type-maidservice').checked ? '月嫂' : '';
+        const type = [typeNursing, typeBabysitting, typeMaidservice].filter(Boolean).join(', ');
+
+        // 获取其他表单字段的值
     const education = document.getElementById('education').value;
     const nationality = document.getElementById('nationality').value;
     const zodiac = document.getElementById('zodiac').value;
