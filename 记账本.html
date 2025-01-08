@@ -55,6 +55,14 @@
             <label for="date">日期:</label>
             <input type="date" id="date" name="date" required>
         </div>
+        <!-- 添加收入/支出选项框 -->
+        <div class="form-group">
+            <label for="type">类型:</label>
+            <select id="type" name="type">
+                <option value="income">收入</option>
+                <option value="expense">支出</option>
+            </select>
+        </div>
         <button type="button" onclick="addEntry()">添加</button>
     </form>
     <table id="entries-table">
@@ -96,8 +104,11 @@
             const description = document.getElementById('description').value;
             const amount = parseFloat(document.getElementById('amount').value);
             const date = document.getElementById('date').value; // 获取日期
-            if (description && amount && date) {
-                entries.push({ description, amount, date }); // 包含日期
+            const type = document.getElementById('type').value; // 获取类型
+            if (description && amount && date && type) {
+                // 根据类型调整金额的正负值
+                const adjustedAmount = type === 'income' ? amount : -amount;
+                entries.push({ description, amount: adjustedAmount, date }); // 包含日期
                 // 对 entries 数组按日期进行排序
                 entries.sort((a, b) => new Date(a.date) - new Date(b.date));
                 renderEntries();
