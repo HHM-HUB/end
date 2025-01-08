@@ -81,6 +81,8 @@
             const savedEntries = localStorage.getItem('entries');
             if (savedEntries) {
                 entries = JSON.parse(savedEntries);
+                // 对 entries 数组按日期进行排序
+                entries.sort((a, b) => new Date(a.date) - new Date(b.date));
                 renderEntries();
             }
         }
@@ -96,10 +98,46 @@
             const date = document.getElementById('date').value; // 获取日期
             if (description && amount && date) {
                 entries.push({ description, amount, date }); // 包含日期
+                // 对 entries 数组按日期进行排序
+                entries.sort((a, b) => new Date(a.date) - new Date(b.date));
                 renderEntries();
                 document.getElementById('entry-form').reset();
                 saveEntries(); // 保存到 localStorage
             }
+        }
+
+        function calculateMonthlyTotals() {
+            const monthlyTotals = {};
+            entries.forEach((entry) => {
+                const date = new Date(entry.date);
+                const yearMonth = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+                if (!monthlyTotals[yearMonth]) {
+                    monthlyTotals[yearMonth] = { income: 0, expense: 0 };
+                }
+                if (entry.amount > 0) {
+                    monthlyTotals[yearMonth].income += entry.amount;
+                } else {
+                    monthlyTotals[yearMonth].expense += Math.abs(entry.amount);
+                }
+            });
+            return monthlyTotals;
+        }
+
+        function calculateYearlyTotals() {
+            const yearlyTotals = {};
+            entries.forEach((entry) => {
+                const date = new Date(entry.date);
+                const year = date.getFullYear();
+                if (!yearlyTotals[year]) {
+                    yearlyTotals[year] = { income: 0, expense: 0 };
+                }
+                if (entry.amount > 0) {
+                    yearlyTotals[year].income += entry.amount;
+                } else {
+                    yearlyTotals[year].expense += Math.abs(entry.amount);
+                }
+            });
+            return yearlyTotals;
         }
 
         function renderEntries() {
@@ -115,6 +153,9 @@
                 }
                 entriesByMonth[yearMonth].push(entry);
             });
+
+            const monthlyTotals = calculateMonthlyTotals();
+            const yearlyTotals = calculateYearlyTotals();
 
             for (const yearMonth in entriesByMonth) {
                 const monthRow = document.createElement('tr');
@@ -142,7 +183,7 @@
                     row.innerHTML = `
                         <td>${entry.description}</td>
                         <td>${entry.amount.toFixed(2)}</td>
-                        <td>${entry.date}</td> <!-- 显示日期 -->
+                        <td>${entry.date}</td>
                         <td>
                             <button onclick="editEntry(${index})">修改</button>
                             <button onclick="deleteEntry(${index})">删除</button>
@@ -151,10 +192,37 @@
                     monthEntriesTbody.appendChild(row);
                 });
 
+                const totalRow = document.createElement('tr');
+                totalRow.innerHTML = `
+                    <td>总计</td>
+                    <td>收入: ${monthlyTotals[yearMonth].income.toFixed(2)}, 支出: ${monthlyTotals[yearMonth].expense.toFixed(2)}</td>
+                    <td colspan="2"></td>
+                `;
+                monthEntriesTbody.appendChild(totalRow);
+
                 monthEntriesTable.appendChild(monthEntriesTbody);
                 monthEntriesCell.appendChild(monthEntriesTable);
                 tbody.appendChild(monthEntriesRow);
                 tbody.appendChild(monthEntriesCell);
+            }
+
+            // 添加年收支总计
+            for (const year in yearlyTotals) {
+                const yearRow = document.createElement('tr');
+                yearRow.innerHTML = `
+                    <td colspan="4">
+                        <strong>${year} 年度总计</strong>
+                    </td>
+                `;
+                tbody.appendChild(yearRow);
+
+                const yearTotalRow = document.createElement('tr');
+                yearTotalRow.innerHTML = `
+                    <td>总计</td>
+                    <td>收入: ${yearlyTotals[year].income.toFixed(2)}, 支出: ${yearlyTotals[year].expense.toFixed(2)}</td>
+                    <td colspan="2"></td>
+                `;
+                tbody.appendChild(yearTotalRow);
             }
         }
 
@@ -203,6 +271,9 @@
                 return selectedYear === '' || entryYear === parseInt(selectedYear, 10);
             });
 
+            const monthlyTotals = calculateMonthlyTotals();
+            const yearlyTotals = calculateYearlyTotals();
+
             // 添加表头信息
             const ecxData = [
                 ['描述', '金额', '日期']
@@ -210,6 +281,23 @@
             filteredEntries.forEach(entry => {
                 ecxData.push([entry.description, entry.amount, entry.date]);
             });
+
+            // 添加月度总计
+            for (const yearMonth in monthlyTotals) {
+                const [year, month] = yearMonth.split('-');
+                if (selectedYear === '' || year === selectedYear) {
+                    ecxData.push(['', '', '']);
+                    ecxData.push([`${yearMonth} 总计`, `收入: ${monthlyTotals[yearMonth].income.toFixed(2)}, 支出: ${monthlyTotals[yearMonth].expense.toFixed(2)}`, '']);
+                }
+            }
+
+            // 添加年度总计
+            for (const year in yearlyTotals) {
+                if (selectedYear === '' || year === selectedYear) {
+                    ecxData.push(['', '', '']);
+                    ecxData.push([`${year} 年度总计`, `收入: ${yearlyTotals[year].income.toFixed(2)}, 支出: ${yearlyTotals[year].expense.toFixed(2)}`, '']);
+                }
+            }
 
             const worksheet = XLSX.utils.aoa_to_sheet(ecxData);
             const workbook = XLSX.utils.book_new();
