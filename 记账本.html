@@ -43,8 +43,25 @@
     <h1>记账本</h1>
     <form id="entry-form">
         <div class="form-group">
-            <label for="description">描述:</label>
-            <input type="text" id="description" name="description" required>
+                        <label for="description">描述:</label>
+
+            <select id="description-select" name="description-select" onchange="toggleOtherDescription()">
+                <option value="超市">超市</option>
+                <option value="工资">工资</option>
+                <option value="药">药</option>
+                <option value="多多">多多</option>
+                <option value="房租">房租</option>
+                <option value="水费">水费</option>
+                <option value="电费">电费</option>
+                <option value="燃气费">燃气费</option>
+                <option value="电车充电费">电车充电费</option>
+                <option value="烟">烟</option>
+                <option value="话费">话费</option>
+                <option value="烫头">烫头</option>
+                <option value="保险">保险</option>
+                <option value="其他">其他</option>
+            </select>
+            <input type="text" id="other-description" name="other-description" style="display: none;" placeholder="请输入其他描述">
         </div>
         <div class="form-group">
             <label for="amount">金额:</label>
@@ -60,7 +77,7 @@
             <label for="type">类型:</label>
             <select id="type" name="type">
                 <option value="income">收入</option>
-                <option value="expense">支出</option>
+                <option value="expense" selected>支出</option>
             </select>
         </div>
         <button type="button" onclick="addEntry()">添加</button>
@@ -101,7 +118,9 @@
         }
 
         function addEntry() {
-            const description = document.getElementById('description').value;
+            const descriptionSelect = document.getElementById('description-select').value;
+            const otherDescription = document.getElementById('other-description').value;
+            const description = descriptionSelect === '其他' ? otherDescription : descriptionSelect;
             const amount = parseFloat(document.getElementById('amount').value);
             const date = document.getElementById('date').value; // 获取日期
             const type = document.getElementById('type').value; // 获取类型
@@ -332,6 +351,16 @@
 
             const exportButtonsContainer = document.querySelector('button[onclick="exportToXLSX()"]').parentNode;
             exportButtonsContainer.insertBefore(yearSelect, exportButtonsContainer.firstChild);
+        }
+
+        function toggleOtherDescription() {
+            const descriptionSelect = document.getElementById('description-select');
+            const otherDescriptionInput = document.getElementById('other-description');
+            if (descriptionSelect.value === '其他') {
+                otherDescriptionInput.style.display = 'block';
+            } else {
+                otherDescriptionInput.style.display = 'none';
+            }
         }
 
         // 页面加载时加载账单记录
