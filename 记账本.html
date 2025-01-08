@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>记账本</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input[type="text"], input[type="number"] {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+        }
+        button {
+            padding: 8px 16px;
+            margin-right: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>记账本</h1>
+    <form id="entry-form">
+        <div class="form-group">
+            <label for="description">描述:</label>
+            <input type="text" id="description" name="description" required>
+        </div>
+        <div class="form-group">
+            <label for="amount">金额:</label>
+            <input type="number" id="amount" name="amount" step="0.01" required>
+        </div>
+        <!-- 添加日期输入字段 -->
+        <div class="form-group">
+            <label for="date">日期:</label>
+            <input type="date" id="date" name="date" required>
+        </div>
+        <button type="button" onclick="addEntry()">添加</button>
+    </form>
+    <table id="entries-table">
+        <thead>
+            <tr>
+                <th>描述</th>
+                <th>金额</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- 记账条目将显示在这里 -->
+        </tbody>
+    </table>
+    <button onclick="exportToECX()">导出为ECX文件</button>
+    <button onclick="exportToXLSX()">导出为XLSX文件</button>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script>
+        let entries = [];
+
+        // 从 localStorage 加载账单记录
+        function loadEntries() {
+            const savedEntries = localStorage.getItem('entries');
+            if (savedEntries) {
+                entries = JSON.parse(savedEntries);
+                renderEntries();
+            }
+        }
+
+        // 保存账单记录到 localStorage
+        function saveEntries() {
+            localStorage.setItem('entries', JSON.stringify(entries));
+        }
+
+        function addEntry() {
+            const description = document.getElementById('description').value;
+            const amount = parseFloat(document.getElementById('amount').value);
+            const date = document.getElementById('date').value; // 获取日期
+            if (description && amount && date) {
+                entries.push({ description, amount, date }); // 包含日期
+                renderEntries();
+                document.getElementById('entry-form').reset();
+                saveEntries(); // 保存到 localStorage
+            }
+        }
+
+        function renderEntries() {
+            const tbody = document.querySelector('#entries-table tbody');
+            tbody.innerHTML = '';
+            const entriesByMonth = {};
+
+            entries.forEach((entry) => {
+                const date = new Date(entry.date);
+                const yearMonth = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+                if (!entriesByMonth[yearMonth]) {
+                    entriesByMonth[yearMonth] = [];
+                }
+                entriesByMonth[yearMonth].push(entry);
+            });
+
+            for (const yearMonth in entriesByMonth) {
+                const monthRow = document.createElement('tr');
+                monthRow.innerHTML = `
+                    <td colspan="4">
+                        <button onclick="toggleMonth('${yearMonth}')">${yearMonth}</button>
+                    </td>
+                `;
+                tbody.appendChild(monthRow);
+
+                const monthEntriesRow = document.createElement('tr');
+                const monthEntriesCell = document.createElement('td');
+                monthEntriesCell.colSpan = 4;
+                monthEntriesCell.style.display = 'none';
+                monthEntriesCell.id = `month-${yearMonth}`;
+
+                const monthEntriesTable = document.createElement('table');
+                monthEntriesTable.style.width = '100%';
+                monthEntriesTable.style.borderCollapse = 'collapse';
+
+                const monthEntriesTbody = document.createElement('tbody');
+
+                entriesByMonth[yearMonth].forEach((entry, index) => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${entry.description}</td>
+                        <td>${entry.amount.toFixed(2)}</td>
+                        <td>${entry.date}</td> <!-- 显示日期 -->
+                        <td>
+                            <button onclick="editEntry(${index})">修改</button>
+                            <button onclick="deleteEntry(${index})">删除</button>
+                        </td>
+                    `;
+                    monthEntriesTbody.appendChild(row);
+                });
+
+                monthEntriesTable.appendChild(monthEntriesTbody);
+                monthEntriesCell.appendChild(monthEntriesTable);
+                tbody.appendChild(monthEntriesRow);
+                tbody.appendChild(monthEntriesCell);
+            }
+        }
+
+        function toggleMonth(yearMonth) {
+            const monthEntriesCell = document.getElementById(`month-${yearMonth}`);
+            if (monthEntriesCell.style.display === 'none' || monthEntriesCell.style.display === '') {
+                monthEntriesCell.style.display = 'table-row';
+            } else {
+                monthEntriesCell.style.display = 'none';
+            }
+        }
+
+        function editEntry(index) {
+            const newDescription = prompt('请输入新的描述:', entries[index].description);
+            const newAmount = parseFloat(prompt('请输入新的金额:', entries[index].amount));
+            const newDate = prompt('请输入新的日期:', entries[index].date); // 获取新的日期
+            if (newDescription && newAmount && newDate) {
+                entries[index] = { description: newDescription, amount: newAmount, date: newDate }; // 包含日期
+                renderEntries();
+                saveEntries(); // 保存到 localStorage
+            }
+        }
+
+        function deleteEntry(index) {
+            entries.splice(index, 1);
+            renderEntries();
+            saveEntries(); // 保存到 localStorage
+        }
+
+        function exportToECX() {
+            const ecxData = entries.map(entry => `${entry.description},${entry.amount},${entry.date}`).join('\n'); // 包含日期
+            const blob = new Blob([ecxData], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = '账目.ecx';
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        function exportToXLSX() {
+            const selectedYear = document.getElementById('year-select').value;
+
+            const filteredEntries = entries.filter(entry => {
+                const entryYear = new Date(entry.date).getFullYear();
+                return selectedYear === '' || entryYear === parseInt(selectedYear, 10);
+            });
+
+            // 添加表头信息
+            const ecxData = [
+                ['描述', '金额', '日期']
+            ];
+            filteredEntries.forEach(entry => {
+                ecxData.push([entry.description, entry.amount, entry.date]);
+            });
+
+            const worksheet = XLSX.utils.aoa_to_sheet(ecxData);
+            const workbook = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
+            const fileName = !isNaN(selectedYear) ? `${selectedYear}账单.xlsx` : '账单.xlsx';
+            XLSX.writeFile(workbook, fileName); // 修改文件名
+        }
+
+        function populateYearSelect() {
+            const yearSelect = document.createElement('select');
+            yearSelect.id = 'year-select';
+            yearSelect.style.marginRight = '5px';
+
+            const uniqueYears = new Set(entries.map(entry => new Date(entry.date).getFullYear()));
+            uniqueYears.forEach(year => {
+                const option = document.createElement('option');
+                option.value = year;
+                option.textContent = year;
+                yearSelect.appendChild(option);
+            });
+
+            const exportButtonsContainer = document.querySelector('button[onclick="exportToXLSX()"]').parentNode;
+            exportButtonsContainer.insertBefore(yearSelect, exportButtonsContainer.firstChild);
+        }
+
+        // 页面加载时加载账单记录
+        window.onload = () => {
+            loadEntries();
+            populateYearSelect();
+        };
+    </script>
+</body>
+</html>
