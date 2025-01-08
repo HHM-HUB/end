@@ -155,6 +155,8 @@
 
         function calculateYearlyTotals() {
             const yearlyTotals = {};
+            let previousYearRemaining = 0; // 初始化上一年剩余金额
+
             entries.forEach((entry) => {
                 const date = new Date(entry.date);
                 const year = date.getFullYear();
@@ -167,6 +169,17 @@
                     yearlyTotals[year].expense += Math.abs(entry.amount);
                 }
             });
+
+            // 计算每年的剩余金额，并将其累加到下一年的收入中
+            const years = Object.keys(yearlyTotals).sort((a, b) => a - b); // 确保按年份顺序处理
+            for (const year of years) {
+                const income = yearlyTotals[year].income;
+                const expense = yearlyTotals[year].expense;
+                const remaining = income - expense;
+                yearlyTotals[year].income += previousYearRemaining; // 累加上一年剩余金额
+                previousYearRemaining = remaining; // 更新上一年剩余金额
+            }
+
             return yearlyTotals;
         }
 
@@ -247,9 +260,12 @@
                 tbody.appendChild(yearRow);
 
                 const yearTotalRow = document.createElement('tr');
+                const income = yearlyTotals[year].income;
+                const expense = yearlyTotals[year].expense;
+                const remaining = income - expense; // 计算剩余金额
                 yearTotalRow.innerHTML = `
                     <td>总计</td>
-                    <td>收入: ${yearlyTotals[year].income.toFixed(2)}, 支出: ${yearlyTotals[year].expense.toFixed(2)}</td>
+                    <td>收入: ${income.toFixed(2)}, 支出: ${expense.toFixed(2)}, 剩余: ${remaining.toFixed(2)}</td>
                     <td colspan="2"></td>
                 `;
                 tbody.appendChild(yearTotalRow);
