@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A</title>
+    <style>
+        .calendar {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+        }
+        .day {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #ccc;
+            cursor: pointer;
+            position: relative;
+        }
+        .day.period {
+            background-color: red;
+        }
+        .details {
+            position: absolute;
+            bottom: -50px;
+            left: 0;
+            width: 100%;
+            background-color: #f9f9f9;
+            border: 1px solid #ccc;
+            padding: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            display: none;
+        }
+        .details.active {
+            display: block;
+        }
+        .popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+        }
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+    </style>
+</head>
+<body>
+    <div id="monthSelector">
+        <button onclick="changeMonth(-1)">上一月</button>
+        <span id="currentMonthYear"></span>
+        <button onclick="changeMonth(1)">下一月</button>
+    </div>
+    <div id="calendarContainer"></div>
+    
+    <div id="popup" class="popup">
+        <div>
+            <label>详情</label><br>
+            <label><input type="radio" name="event" value="经期" checked> 经期</label>
+            <label><input type="radio" name="event" value="无"> 无</label><br>
+            <label>流量</label><br>
+            <label><input type="radio" name="flow" value="非常少"> 非常少</label>
+            <label><input type="radio" name="flow" value="少量" checked> 少量</label>
+            <label><input type="radio" name="flow" value="中量"> 中量</label>
+            <label><input type="radio" name="flow" value="大量"> 大量</label>
+            <label><input type="radio" name="flow" value="非常大量"> 非常大量</label><br>
+            <label>颜色</label><br>
+            <label><input type="radio" name="color" value="#ffcccc" checked> 浅红色</label>
+            <label><input type="radio" name="color" value="#ff0000"> 鲜红色</label>
+            <label><input type="radio" name="color" value="#8b0000"> 深红色</label>
+            <label><input type="radio" name="color" value="#DEB887"> 褐色</label>
+            <label><input type="radio" name="color" value="#000000"> 黑色</label><br>
+        </div>
+        <button onclick="savePopupDetails()">保存</button>
+        <button onclick="closePopup()">取消</button>
+    </div>
+    <div id="overlay" class="overlay" onclick="closePopup()"></div>
+
+    <!-- 添加小型年日历 -->
+    <div id="yearCalendarContainer" style="margin-top: 20px;"></div>
+
+    <!-- 添加导出按钮 -->
+    <button onclick="exportYearCalendar()">导出年历为图片</button>
+
+    <script>
+        let currentMonth = new Date().getMonth();
+        let currentYear = new Date().getFullYear();
+        let selectedDayElement = null;
+
+        function renderCalendar(year, month) {
+            const calendarContainer = document.getElementById('calendarContainer');
+            calendarContainer.innerHTML = ''; // 清空当前日历容器
+
+            const calendar = document.createElement('div');
+            calendar.className = 'calendar';
+            calendar.id = `calendar-${year}-${month}`;
+
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+            for (let i = 1; i <= daysInMonth; i++) {
+                const dayElement = createDayElement(i);
+                // 从 localStorage 中读取详情并显示
+                const dayKey = `${year}-${month + 1}-${i}`;
+                const details = localStorage.getItem(dayKey);
+                if (details) {
+                    const parsedDetails = JSON.parse(details);
+                    if (parsedDetails.color !== '') {
+                        dayElement.style.backgroundColor = parsedDetails.color;
+                    }
+                    // 检查是否选中状态
+                    if (parsedDetails.selected) {
+                        dayElement.classList.add('selected'); // 假设添加一个 'selected' 类来表示选中状态
+                    }
+                }
+                calendar.appendChild(dayElement);
+            }
+
+            calendarContainer.appendChild(calendar);
+            document.getElementById('currentMonthYear').textContent = `${new Date(year, month).toLocaleString('default', { month: 'long', year: 'numeric' })}`;
+        }
+
+        function createDayElement(dayNumber) {
+            const dayElement = document.createElement('div');
+            dayElement.className = 'day';
+            dayElement.textContent = dayNumber;
+            dayElement.addEventListener('click', () => openPopup(dayElement));
+            return dayElement;
+        }
+
+        function saveDetails(button, dayElement) {
+            const eventSelect = dayElement.querySelector('select:nth-child(1)');
+            const flowSelect = dayElement.querySelector('select:nth-child(2)');
+            const colorSelect = dayElement.querySelector('select:nth-child(3)');
+
+            const eventValue = eventSelect.value;
+            const flowValue = flowSelect.value;
+            const colorValue = colorSelect.value;
+
+            if (eventValue === '其他') {
+                colorSelect.value = '#ffffff'; // 设置颜色为白色
+                flowSelect.value = ''; // 设置流量为无
+            }
+
+            if (colorValue !== '') {
+                dayElement.style.backgroundColor = colorValue;
+            } else {
+                dayElement.style.backgroundColor = ''; // 清除背景颜色
+            }
+
+            const details = dayElement.querySelector('.details');
+            details.classList.remove('active');
+        }
+
+        document.addEventListener('click', function(event) {
+            const details = document.querySelector('.details.active');
+            if (details && !details.contains(event.target) && !event.target.classList.contains('day')) {
+                details.classList.remove('active');
+            }
+        });
+
+        function changeMonth(offset) {
+            currentMonth += offset;
+            if (currentMonth < 0) {
+                currentMonth = 11;
+                currentYear--;
+            } else if (currentMonth > 11) {
+                currentMonth = 0;
+                currentYear++;
+            }
+            renderCalendar(currentYear, currentMonth);
+        }
+
+        // 添加打开弹窗的函数
+        function openPopup(dayElement) {
+            selectedDayElement = dayElement;
+            document.getElementById('popup').style.display = 'block';
+            document.getElementById('overlay').style.display = 'block';
+
+            // 从 localStorage 中读取详情并设置弹窗中的单选框
+            const dayKey = `${currentYear}-${currentMonth + 1}-${dayElement.textContent}`;
+            const details = localStorage.getItem(dayKey);
+            if (details) {
+                const parsedDetails = JSON.parse(details);
+                const eventRadio = document.querySelector(`#popup input[name="event"][value="${parsedDetails.event}"]`);
+                const flowRadio = document.querySelector(`#popup input[name="flow"][value="${parsedDetails.flow}"]`);
+                const colorRadio = document.querySelector(`#popup input[name="color"][value="${parsedDetails.color}"]`);
+
+                if (eventRadio) eventRadio.checked = true;
+                if (flowRadio) flowRadio.checked = true;
+                if (colorRadio) colorRadio.checked = true;
+            }
+        }
+
+        // 添加关闭弹窗的函数
+        function closePopup() {
+            document.getElementById('popup').style.display = 'none';
+            document.getElementById('overlay').style.display = 'none';
+        }
+
+        // 添加保存弹窗中选择的详细信息的函数
+        function savePopupDetails() {
+            const eventRadio = document.querySelector('#popup input[name="event"]:checked');
+            const flowRadio = document.querySelector('#popup input[name="flow"]:checked');
+            const colorRadio = document.querySelector('#popup input[name="color"]:checked');
+
+            let eventValue = eventRadio ? eventRadio.value : '';
+            let flowValue = flowRadio ? flowRadio.value : '';
+            let colorValue = colorRadio ? colorRadio.value : '';
+
+            // 如果选择“无”，则取消流量和颜色的选择
+            if (eventValue === '无') {
+                flowValue = '';
+                colorValue = '';
+                if (flowRadio) flowRadio.checked = false;
+                if (colorRadio) colorRadio.checked = false;
+            } else if (eventValue === '其他') {
+                colorValue = '#ffffff'; // 设置颜色为白色
+                flowValue = ''; // 设置流量为无
+            }
+
+            if (colorValue !== '') {
+                // 设置背景颜色
+                selectedDayElement.style.backgroundColor = colorValue;
+            } else {
+                selectedDayElement.style.backgroundColor = ''; // 清除背景颜色
+            }
+
+            // 保存详情到 localStorage
+            const dayKey = `${currentYear}-${currentMonth + 1}-${selectedDayElement.textContent}`;
+            const details = { event: eventValue, flow: flowValue, color: colorValue, selected: true }; // 添加 selected 属性
+            localStorage.setItem(dayKey, JSON.stringify(details));
+
+            closePopup();
+        }
+
+        // 添加保存所有日期详细信息的函数
+        function saveAllDetails() {
+            const days = document.querySelectorAll('.day');
+            days.forEach(day => {
+                const details = day.querySelector('.details');
+                if (details && details.classList.contains('active')) {
+                    saveDetails(null, day);
+                }
+            });
+        }
+
+        // 添加渲染年日历的函数
+        function renderYearCalendar(year) {
+            const yearCalendarContainer = document.getElementById('yearCalendarContainer');
+            yearCalendarContainer.innerHTML = ''; // 清空当前年日历容器
+
+            for (let month = 0; month < 12; month++) {
+                const monthContainer = document.createElement('div');
+                monthContainer.style.display = 'inline-block';
+                monthContainer.style.marginRight = '10px';
+
+                const monthTitle = document.createElement('div');
+                monthTitle.textContent = new Date(year, month).toLocaleString('default', { month: 'long' });
+                monthContainer.appendChild(monthTitle);
+
+                const monthCalendar = document.createElement('div');
+                monthCalendar.className = 'calendar';
+                monthCalendar.style.width = '150px';
+
+                const daysInMonth = new Date(year, month + 1, 0).getDate();
+                for (let i = 1; i <= daysInMonth; i++) {
+                    const dayElement = document.createElement('div');
+                    dayElement.className = 'day';
+                    dayElement.style.width = '15px';
+                    dayElement.style.height = '15px';
+                    dayElement.style.margin = '1px';
+                    dayElement.textContent = i; // 添加日期数字
+
+                    // 从 localStorage 中读取详情并显示
+                    const dayKey = `${year}-${month + 1}-${i}`;
+                    const details = localStorage.getItem(dayKey);
+                    if (details) {
+                        const parsedDetails = JSON.parse(details);
+                        if (parsedDetails.color !== '') {
+                            dayElement.style.backgroundColor = parsedDetails.color;
+                        }
+                    }
+
+                    monthCalendar.appendChild(dayElement);
+                }
+
+                monthContainer.appendChild(monthCalendar);
+                yearCalendarContainer.appendChild(monthContainer);
+            }
+        }
+
+        // 添加导出年历为图片的函数
+        function exportYearCalendar() {
+            html2canvas(document.getElementById('yearCalendarContainer')).then(canvas => {
+                const link = document.createElement('a');
+                link.href = canvas.toDataURL('image/png');
+                link.download = 'year_calendar.png';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            });
+        }
+
+        // 初始化日历
+        renderCalendar(currentYear, currentMonth);
+
+        // 初始化年日历
+        renderYearCalendar(currentYear);
+
+    </script>
+
+    <!-- 引入 html2canvas 库 -->
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+</body>
+</html>
