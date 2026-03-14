@@ -219,6 +219,7 @@
             </div>
 
             <button id="addBtn">添加记录</button>
+            <button id="exportBtn" class="export-btn">📥 导出数据</button>
         </div>
 
         <div class="stats-section">
@@ -266,6 +267,7 @@
             document.getElementById('date').valueAsDate = new Date();
 
             document.getElementById('addBtn').addEventListener('click', addRecord);
+            document.getElementById('exportBtn').addEventListener('click', exportData);
 
             renderTable();
             updateStats();
@@ -384,6 +386,37 @@
             const month = String(date.getMonth() + 1).padStart(2, '0');
             const day = String(date.getDate()).padStart(2, '0');
             return `${year}-${month}-${day}`;
+        }
+
+        function exportData() {
+            if (records.length === 0) {
+                alert('暂无数据可导出！');
+                return;
+            }
+
+            let csvContent = 'Date,Weight (斤),Created Time\n';
+
+            records.forEach(record => {
+                const date = formatDate(record.date);
+                const weight = record.weight.toFixed(1);
+                const createdAt = new Date(record.createdAt).toLocaleString('zh-CN');
+
+                csvContent += `${date},${weight},${createdAt}\n`;
+            });
+
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+
+            link.setAttribute('href', url);
+            link.setAttribute('download', `weight_record_${formatDate(new Date().toISOString())}.csv`);
+            link.style.visibility = 'hidden';
+
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+
+            alert(`成功导出 ${records.length} 条记录！`);
         }
 
         init();
