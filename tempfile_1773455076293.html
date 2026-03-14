@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>体重记录器</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 2em;
+        }
+
+        .input-section {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: bold;
+        }
+
+        input[type="date"],
+        input[type="number"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        input[type="date"]:focus,
+        input[type="number"]:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            resize: vertical;
+            min-height: 80px;
+            font-family: inherit;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        button {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .stats-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .stat-card h3 {
+            font-size: 14px;
+            margin-bottom: 10px;
+            opacity: 0.9;
+        }
+
+        .stat-card .value {
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .table-section {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px;
+            text-align: left;
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        .delete-btn {
+            background: #ff4757;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.3s;
+        }
+
+        .delete-btn:hover {
+            background: #ff3838;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 50px 20px;
+            color: #999;
+        }
+
+        .empty-state p {
+            font-size: 18px;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 1.5em;
+            }
+
+            .stat-card .value {
+                font-size: 22px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📊 体重记录器</h1>
+
+        <div class="input-section">
+            <div class="form-group">
+                <label for="date">日期</label>
+                <input type="date" id="date" required>
+            </div>
+
+            <div class="form-group">
+                <label for="weight">体重 (斤)</label>
+                <input type="number" id="weight" step="0.1" min="0" placeholder="例如：131.0" required>
+            </div>
+
+            <div class="form-group">
+                <label for="notes">备注</label>
+                <textarea id="notes" placeholder="记录当天的心情、饮食、运动等情况（可选）"></textarea>
+            </div>
+
+            <button id="addBtn">添加记录</button>
+        </div>
+
+        <div class="stats-section">
+            <div class="stat-card">
+                <h3>总记录数</h3>
+                <div class="value" id="totalCount">0</div>
+            </div>
+            <div class="stat-card">
+                <h3>最新体重</h3>
+                <div class="value" id="latestWeight">-</div>
+            </div>
+            <div class="stat-card">
+                <h3>平均体重</h3>
+                <div class="value" id="avgWeight">-</div>
+            </div>
+            <div class="stat-card">
+                <h3>变化量</h3>
+                <div class="value" id="change">-</div>
+            </div>
+        </div>
+
+        <div class="table-section">
+            <table id="weightTable">
+                <thead>
+                    <tr>
+                        <th>日期</th>
+                        <th>体重 (斤)</th>
+                        <th>备注</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+                </tbody>
+            </table>
+            <div class="empty-state" id="emptyState">
+                <p>📝 还没有记录，快来添加第一条体重记录吧！</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let records = JSON.parse(localStorage.getItem('weightRecords')) || [];
+
+        function init() {
+            document.getElementById('date').valueAsDate = new Date();
+
+            document.getElementById('addBtn').addEventListener('click', addRecord);
+
+            renderTable();
+            updateStats();
+        }
+
+        function addRecord() {
+            const date = document.getElementById('date').value;
+            const weight = parseFloat(document.getElementById('weight').value);
+            const notes = document.getElementById('notes').value.trim();
+
+            if (!date || !weight) {
+                alert('请填写日期和体重');
+                return;
+            }
+
+            const record = {
+                id: Date.now(),
+                date,
+                weight,
+                notes,
+                createdAt: new Date().toISOString()
+            };
+
+            records.push(record);
+            records.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+            saveRecords();
+            renderTable();
+            updateStats();
+
+            document.getElementById('weight').value = '';
+            document.getElementById('notes').value = '';
+
+            alert('记录添加成功！');
+        }
+
+        function deleteRecord(id) {
+            if (confirm('确定要删除这条记录吗？')) {
+                records = records.filter(record => record.id !== id);
+                saveRecords();
+                renderTable();
+                updateStats();
+            }
+        }
+
+        function saveRecords() {
+            localStorage.setItem('weightRecords', JSON.stringify(records));
+        }
+
+        function renderTable() {
+            const tbody = document.getElementById('tableBody');
+            const emptyState = document.getElementById('emptyState');
+
+            tbody.innerHTML = '';
+
+            if (records.length === 0) {
+                emptyState.style.display = 'block';
+                return;
+            }
+
+            emptyState.style.display = 'none';
+
+            records.forEach(record => {
+                const row = tbody.insertRow();
+
+                const cell1 = row.insertCell(0);
+                const cell2 = row.insertCell(1);
+                const cell3 = row.insertCell(2);
+                const cell4 = row.insertCell(3);
+
+                cell1.textContent = formatDate(record.date);
+                cell2.textContent = record.weight.toFixed(1);
+                cell3.textContent = record.notes || '-';
+
+                const deleteBtn = document.createElement('button');
+                deleteBtn.className = 'delete-btn';
+                deleteBtn.textContent = '删除';
+                deleteBtn.addEventListener('click', function() {
+                    deleteRecord(record.id);
+                });
+                cell4.appendChild(deleteBtn);
+            });
+        }
+
+        function updateStats() {
+            const totalCount = records.length;
+            document.getElementById('totalCount').textContent = totalCount;
+
+            if (totalCount === 0) {
+                document.getElementById('latestWeight').textContent = '-';
+                document.getElementById('avgWeight').textContent = '-';
+                document.getElementById('change').textContent = '-';
+                return;
+            }
+
+            const latestWeight = records[0].weight;
+            document.getElementById('latestWeight').textContent = latestWeight.toFixed(1);
+
+            const totalWeight = records.reduce((sum, record) => sum + record.weight, 0);
+            const avgWeight = totalWeight / totalCount;
+            document.getElementById('avgWeight').textContent = avgWeight.toFixed(1);
+
+            if (totalCount >= 2) {
+                const firstWeight = records[records.length - 1].weight;
+                const change = latestWeight - firstWeight;
+                const sign = change >= 0 ? '+' : '';
+                document.getElementById('change').textContent = `${sign}${change.toFixed(1)}`;
+            } else {
+                document.getElementById('change').textContent = '-';
+            }
+        }
+
+        function formatDate(dateStr) {
+            const date = new Date(dateStr);
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        }
+
+        init();
+    </script>
+</body>
+</html>
